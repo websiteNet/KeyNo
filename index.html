@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redirecionamento Linkvertise</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h2 {
+            font-size: 1.5em;
+        }
+
+        a {
+            display: inline-block;
+            padding: 15px 30px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 20px;
+            font-size: 1.2em;
+        }
+
+        a:hover {
+            background-color: #45a049;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #333;
+        }
+
+        /* Ajuste para telas pequenas (celular e tablet) */
+        @media (max-width: 600px) {
+            h2 {
+                font-size: 1.2em;
+            }
+
+            a {
+                font-size: 1em;
+                padding: 12px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Clique abaixo para acessar seu conteúdo:</h2>
+    <a id="myLink" href="#">Descriptografar e Acessar</a>
+    <p id="result"></p>
+
+    <script>
+        // Função para descriptografar a chave recebida
+        function xorEncryptDecrypt(input, key) {
+            let output = '';
+            for (let i = 0; i < input.length; i++) {
+                let inputChar = input.charCodeAt(i);
+                let keyChar = key.charCodeAt(i % key.length);
+                output += String.fromCharCode(inputChar ^ keyChar);
+            }
+            return output;
+        }
+
+        // Função para obter os parâmetros da URL
+        function getUrlParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const playerId = urlParams.get('id'); // Obtém o ID do jogador
+            const encryptedKey = urlParams.get('key'); // Obtém a chave criptografada
+            return { playerId, encryptedKey };
+        }
+
+        // Função para descriptografar a chave e exibir o resultado
+        function decryptKey() {
+            const { playerId, encryptedKey } = getUrlParams();
+            const resultElement = document.getElementById("result");
+
+            if (!playerId || !encryptedKey) {
+                resultElement.innerText = "Erro: Dados inválidos.";
+                return;
+            }
+
+            // Chave de criptografia (mesma usada no Roblox)
+            const encryptionKey = "41kYyN" + playerId + "b4Y8WlFEMYrDW0zynda";
+
+            // Descriptografa a chave
+            const decryptedKey = xorEncryptDecrypt(encryptedKey, encryptionKey);
+
+            // Exibe a chave descriptografada
+            resultElement.innerText = "Chave Descriptografada: " + decryptedKey;
+        }
+
+        // Adiciona evento ao botão
+        document.getElementById("myLink").addEventListener("click", function (event) {
+            event.preventDefault(); // Impede o redirecionamento
+            decryptKey(); // Executa a função de descriptografar
+        });
+    </script>
+
+</body>
+</html>
