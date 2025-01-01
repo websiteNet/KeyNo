@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Descriptografar e Exibir Key</title>
+    <title>Exibir Key</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -52,49 +52,36 @@
 </head>
 <body>
 
-    <h2>Clique no botão abaixo para descriptografar sua Key:</h2>
-    <a id="decryptButton" href="#">Descriptografar e Mostrar Key</a>
+    <h2>Clique no botão abaixo para exibir sua Key:</h2>
+    <a id="showKeyButton" href="#">Exibir Key</a>
     <p id="result"></p>
 
     <script>
-        // Função XOR para descriptografar a chave
-function xorEncryptDecrypt(input, key) {
-    let output = '';
-    for (let i = 0; i < input.length; i++) {
-        let inputChar = input.charCodeAt(i);
-        let keyChar = key.charCodeAt(i % key.length);
-        output += String.fromCharCode(inputChar ^ keyChar);
-    }
-    return output;
-}
+        // Função para obter parâmetros da URL
+        function getUrlParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const playerId = urlParams.get('id');
+            const key = urlParams.get('key');
+            return { playerId, key };
+        }
 
-// Função para obter parâmetros da URL
-function getUrlParams() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const playerId = urlParams.get('id');
-    const encryptedKey = urlParams.get('key');
-    return { playerId, encryptedKey };
-}
+        // Obtendo os parâmetros da URL
+        const { playerId, key } = getUrlParams();
 
-// Obtendo os parâmetros da URL
-const { playerId, encryptedKey } = getUrlParams();
+        // Referência ao botão
+        const button = document.getElementById('showKeyButton');
+        const result = document.getElementById('result');
 
-// Certifique-se de que a chave esteja corretamente decodificada
-const decodedKey = encryptedKey ? decodeURIComponent(encryptedKey) : null;
+        // Adiciona um evento de clique ao botão para exibir a chave
+        button.addEventListener('click', (event) => {
+            event.preventDefault();
 
-// Se a chave e o ID estiverem presentes, processe a descriptografia
-if (playerId && decodedKey) {
-    // Chave para a descriptografia (deve ser a mesma usada na criptografia)
-    const encryptionKey = "41kYyN" + playerId + "b4Y8WlFEMYrDW0zynda";  // Use o mesmo formato de chave da criptografia
-    
-    // Descriptografa a chave
-    const decryptedKey = xorEncryptDecrypt(decodedKey, encryptionKey);
-    
-    // Exibe a chave descriptografada na página
-    document.getElementById('result').textContent = decryptedKey;
-} else {
-    alert("Erro: Parâmetros inválidos na URL.");
-}
+            if (playerId && key) {
+                result.textContent = `Player ID: ${playerId}, Key: ${decodeURIComponent(key)}`;
+            } else {
+                result.textContent = "Erro: Parâmetros inválidos na URL.";
+            }
+        });
     </script>
 
 </body>
