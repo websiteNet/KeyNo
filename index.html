@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Descriptografar e Exibir Key</title>
+    <title>Redirecionar para o Site Principal</title>
+    <script src="https://publisher.linkvertise.com/cdn/linkvertise.js"></script>
+    <script>linkvertise(779098, {whitelist: [], blacklist: [""]});</script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -31,12 +33,6 @@
             background-color: #45a049;
         }
 
-        #result {
-            margin-top: 20px;
-            font-size: 1.2em;
-            color: #333;
-        }
-
         /* Ajuste para telas pequenas (celular e tablet) */
         @media (max-width: 600px) {
             h2 {
@@ -52,9 +48,8 @@
 </head>
 <body>
 
-    <h2>Clique no botão abaixo para descriptografar sua Key:</h2>
-    <a id="decryptButton" href="#">Descriptografar e Mostrar Key</a>
-    <p id="result"></p>
+    <h2>Clique abaixo para acessar o site principal:</h2>
+    <div id="redirectLink"></div>
 
     <script>
         // Função XOR para descriptografar a chave
@@ -95,6 +90,7 @@ if (playerId && decodedKey) {
 } else {
     alert("Erro: Parâmetros inválidos na URL.");
 }
+
     </script>
 
 </body>
