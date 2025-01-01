@@ -1,99 +1,38 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Descriptografar e Exibir Key</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin: 0;
-            padding: 20px;
-        }
-
-        h2 {
-            font-size: 1.5em;
-        }
-
-        a {
-            display: inline-block;
-            padding: 15px 30px;
-            background-color: #4CAF50;
-            color: white;
-            text-decoration: none;
-            border-radius: 5px;
-            margin-top: 20px;
-            font-size: 1.2em;
-        }
-
-        a:hover {
-            background-color: #45a049;
-        }
-
-        #result {
-            margin-top: 20px;
-            font-size: 1.2em;
-            color: #333;
-        }
-
-        /* Ajuste para telas pequenas (celular e tablet) */
-        @media (max-width: 600px) {
-            h2 {
-                font-size: 1.2em;
-            }
-
-            a {
-                font-size: 1em;
-                padding: 12px 20px;
-            }
-        }
-    </style>
-</head>
-<body>
-
-    <h2>Clique no botão abaixo para descriptografar sua Key:</h2>
-    <a id="decryptButton" href="#">Descriptografar e Mostrar Key</a>
-    <p id="result"></p>
-
-    <script>
-    // Função XOR para descriptografar a chave
-    function xorEncryptDecrypt(input, key) {
-        let output = '';
-        for (let i = 0; i < input.length; i++) {
-            let inputChar = input.charCodeAt(i);
-            let keyChar = key.charCodeAt(i % key.length);
-            output += String.fromCharCode(inputChar ^ keyChar);
-        }
-        return output;
+// Função XOR para descriptografar a chave
+function xorEncryptDecrypt(input, key) {
+    let output = '';
+    for (let i = 0; i < input.length; i++) {
+        let inputChar = input.charCodeAt(i);
+        let keyChar = key.charCodeAt(i % key.length);
+        output += String.fromCharCode(inputChar ^ keyChar);
     }
+    return output;
+}
 
-    // Obter parâmetros da URL
-    function getUrlParams() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const playerId = urlParams.get('id');
-        const encryptedKey = urlParams.get('key');
-        return { playerId, encryptedKey };
-    }
+// Função para obter parâmetros da URL
+function getUrlParams() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const playerId = urlParams.get('id');
+    const encryptedKey = urlParams.get('key');
+    return { playerId, encryptedKey };
+}
 
-    // Chave de criptografia usada no Roblox
-    const encryptionKey = "41kYyN" + getUrlParams().playerId + "b4Y8WlFEMYrDW0zynda";
+// Obtendo os parâmetros da URL
+const { playerId, encryptedKey } = getUrlParams();
 
-    document.getElementById("decryptButton").addEventListener("click", function (e) {
-        e.preventDefault();
-        const { encryptedKey } = getUrlParams();
-        if (!encryptedKey) {
-            alert("Erro: Chave criptografada não encontrada!");
-            return;
-        }
+// Certifique-se de que a chave esteja corretamente decodificada
+const decodedKey = encryptedKey ? decodeURIComponent(encryptedKey) : null;
 
-        // Descriptografar a chave
-        const decryptedKey = xorEncryptDecrypt(decodeURIComponent(encryptedKey), encryptionKey);
-
-        // Mostrar o resultado
-        document.getElementById("result").textContent = "Sua Key: " + decryptedKey;
-    });
-    </script>
-
-</body>
-</html>
+// Se a chave e o ID estiverem presentes, processe a descriptografia
+if (playerId && decodedKey) {
+    // Chave para a descriptografia (deve ser a mesma usada na criptografia)
+    const encryptionKey = "41kYyN" + playerId + "b4Y8WlFEMYrDW0zynda";  // Use o mesmo formato de chave da criptografia
+    
+    // Descriptografa a chave
+    const decryptedKey = xorEncryptDecrypt(decodedKey, encryptionKey);
+    
+    // Exibe a chave descriptografada na página
+    document.getElementById('result').textContent = decryptedKey;
+} else {
+    alert("Erro: Parâmetros inválidos na URL.");
+}
