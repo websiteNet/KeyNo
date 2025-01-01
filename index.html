@@ -57,41 +57,42 @@
     <p id="result"></p>
 
     <script>
-        // Função XOR para descriptografar a chave
-        function xorEncryptDecrypt(input, key) {
-            let output = '';
-            for (let i = 0; i < input.length; i++) {
-                let inputChar = input.charCodeAt(i);
-                let keyChar = key.charCodeAt(i % key.length);
-                output += String.fromCharCode(inputChar ^ keyChar);
-            }
-            return output;
+    // Função XOR para descriptografar a chave
+    function xorEncryptDecrypt(input, key) {
+        let output = '';
+        for (let i = 0; i < input.length; i++) {
+            let inputChar = input.charCodeAt(i);
+            let keyChar = key.charCodeAt(i % key.length);
+            output += String.fromCharCode(inputChar ^ keyChar);
+        }
+        return output;
+    }
+
+    // Obter parâmetros da URL
+    function getUrlParams() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const playerId = urlParams.get('id');
+        const encryptedKey = urlParams.get('key');
+        return { playerId, encryptedKey };
+    }
+
+    // Chave de criptografia usada no Roblox
+    const encryptionKey = "41kYyN" + getUrlParams().playerId + "b4Y8WlFEMYrDW0zynda";
+
+    document.getElementById("decryptButton").addEventListener("click", function (e) {
+        e.preventDefault();
+        const { encryptedKey } = getUrlParams();
+        if (!encryptedKey) {
+            alert("Erro: Chave criptografada não encontrada!");
+            return;
         }
 
-        // Obter parâmetros da URL
-        function getUrlParams() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const playerId = urlParams.get('id');
-            const encryptedKey = urlParams.get('key');
-            return { playerId, encryptedKey };
-        }
+        // Descriptografar a chave
+        const decryptedKey = xorEncryptDecrypt(decodeURIComponent(encryptedKey), encryptionKey);
 
-        // Evento ao clicar no botão
-        document.getElementById('decryptButton').addEventListener('click', function (event) {
-            event.preventDefault();
-
-            const { playerId, encryptedKey } = getUrlParams();
-
-            if (!playerId || !encryptedKey) {
-                document.getElementById('result').textContent = "Erro: Parâmetros inválidos na URL.";
-                return;
-            }
-
-            const decryptionKey = "41kYyN" + playerId + "b4Y8WlFEMYrDW0zynda";
-            const decryptedKey = xorEncryptDecrypt(decodeURIComponent(encryptedKey), decryptionKey);
-
-            document.getElementById('result').textContent = `Key descriptografada: ${decryptedKey}`;
-        });
+        // Mostrar o resultado
+        document.getElementById("result").textContent = "Sua Key: " + decryptedKey;
+    });
     </script>
 
 </body>
