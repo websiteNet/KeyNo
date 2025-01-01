@@ -87,10 +87,11 @@
             }
 
             // Chave de criptografia (mesma usada no Roblox)
+            const decodedKey = encryptedKey ? decodeURIComponent(encryptedKey) : null;
             const encryptionKey = "41kYyN" + playerId + "b4Y8WlFEMYrDW0zynda";
 
             // Descriptografa a chave
-            const decryptedKey = xorEncryptDecrypt(encryptedKey, encryptionKey);
+            const decryptedKey = xorEncryptDecrypt(encryptedKey, decodedKey);
 
             // Exibe a chave descriptografada
             resultElement.innerText = "Chave Descriptografada: " + decryptedKey;
