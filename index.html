@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Redirecionamento Linkvertise</title>
+    <title>Descriptografar e Exibir Key</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -52,12 +52,12 @@
 </head>
 <body>
 
-    <h2>Clique abaixo para acessar seu conteúdo:</h2>
-    <a id="myLink" href="#">Descriptografar e Acessar</a>
+    <h2>Clique no botão abaixo para descriptografar sua Key:</h2>
+    <a id="decryptButton" href="#">Descriptografar e Mostrar Key</a>
     <p id="result"></p>
 
     <script>
-        // Função para descriptografar a chave recebida
+        // Função XOR para descriptografar a chave
         function xorEncryptDecrypt(input, key) {
             let output = '';
             for (let i = 0; i < input.length; i++) {
@@ -68,39 +68,29 @@
             return output;
         }
 
-        // Função para obter os parâmetros da URL
+        // Obter parâmetros da URL
         function getUrlParams() {
             const urlParams = new URLSearchParams(window.location.search);
-            const playerId = urlParams.get('id'); // Obtém o ID do jogador
-            const encryptedKey = urlParams.get('key'); // Obtém a chave criptografada
+            const playerId = urlParams.get('id');
+            const encryptedKey = urlParams.get('key');
             return { playerId, encryptedKey };
         }
 
-        // Função para descriptografar a chave e exibir o resultado
-        function decryptKey() {
+        // Evento ao clicar no botão
+        document.getElementById('decryptButton').addEventListener('click', function (event) {
+            event.preventDefault();
+
             const { playerId, encryptedKey } = getUrlParams();
-            const resultElement = document.getElementById("result");
 
             if (!playerId || !encryptedKey) {
-                resultElement.innerText = "Erro: Dados inválidos.";
+                document.getElementById('result').textContent = "Erro: Parâmetros inválidos na URL.";
                 return;
             }
 
-            // Chave de criptografia (mesma usada no Roblox)
-            const decodedKey = encryptedKey ? decodeURIComponent(encryptedKey) : null;
-            const encryptionKey = "41kYyN" + playerId + "b4Y8WlFEMYrDW0zynda";
+            const decryptionKey = "41kYyN" + playerId + "b4Y8WlFEMYrDW0zynda";
+            const decryptedKey = xorEncryptDecrypt(decodeURIComponent(encryptedKey), decryptionKey);
 
-            // Descriptografa a chave
-            const decryptedKey = xorEncryptDecrypt(encryptedKey, decodedKey);
-
-            // Exibe a chave descriptografada
-            resultElement.innerText = "Chave Descriptografada: " + decryptedKey;
-        }
-
-        // Adiciona evento ao botão
-        document.getElementById("myLink").addEventListener("click", function (event) {
-            event.preventDefault(); // Impede o redirecionamento
-            decryptKey(); // Executa a função de descriptografar
+            document.getElementById('result').textContent = `Key descriptografada: ${decryptedKey}`;
         });
     </script>
 
