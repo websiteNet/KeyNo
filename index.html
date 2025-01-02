@@ -57,7 +57,8 @@
     <p id="result"></p>
 
     <script>
-        function xorEncryptDecrypt(input, key) {
+        // Função XOR para descriptografar a chave
+function xorEncryptDecrypt(input, key) {
     let output = '';
     for (let i = 0; i < input.length; i++) {
         let inputChar = input.charCodeAt(i);
@@ -94,6 +95,7 @@ if (playerId && decodedKey) {
 } else {
     alert("Erro: Parâmetros inválidos na URL.");
 }
+
     </script>
 
 </body>
